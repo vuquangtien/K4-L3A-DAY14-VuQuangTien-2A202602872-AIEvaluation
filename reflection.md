@@ -157,11 +157,11 @@ deterministically without waiting for retriever changes.
 
 | Failure ID | Type | Root Cause | Suggested Fix | Status |
 |------------|------|------------|---------------|--------|
-| F001 | hallucination | Multiple issues detected — review full pipeline | Add grounding checks that reject claims unsupported by retrieved context. | Open |
-| F002 | hallucination | Answer is missing key information — increase context window or improve generation | Improve prompt instructions and intent handling so answers address the user question. | Open |
-| F003 | off_topic | Answer does not address the question — improve prompt clarity | Add intent classification and out-of-scope response guidance before generation. | Open |
-| F004 | off_topic | Multiple issues detected — review full pipeline | Add regression cases for the highest-frequency failure cluster. | Open |
-| F005 | hallucination | Context is missing or irrelevant — improve retrieval | Review low-scoring examples with a domain expert and update the golden dataset. | Open |
+| F001 | off_topic | Answer does not address the question — improve prompt clarity | Add intent classification and out-of-scope response guidance before generation. | Open |
+| F002 | off_topic | Context is missing or irrelevant — improve retrieval | Add grounding checks that reject claims unsupported by retrieved context. | Open |
+| F003 | hallucination | Answer is missing key information — increase context window or improve generation | Add regression cases for the highest-frequency failure cluster. | Open |
+| F004 | hallucination | Multiple issues detected — review full pipeline | Review and prioritize a fix | Open |
+| F005 | hallucination | Context is missing or irrelevant — improve retrieval | Review and prioritize a fix | Open |
 
 **Three prioritized suggestions**
 

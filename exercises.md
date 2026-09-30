@@ -30,11 +30,11 @@ critical.
 
 | Metric | Acceptable Low Score Scenario | Critical Low Score Scenario | Action Required |
 |---|---|---|---|
-| Faithfulness | | | |
-| Answer Relevance | | | |
-| Context Recall | | | |
-| Context Precision | | | |
-| Completeness | | | |
+| Faithfulness | A short, clearly labelled out-of-scope refusal may have low lexical overlap while still safely following policy. | An in-scope policy answer makes unsupported claims about refunds, warranty, delivery, or account actions. | Block release for in-scope factual claims; calibrate safety refusals with a semantic judge. |
+| Answer Relevance | A user asks a broad comparison and receives one useful part while a follow-up is needed. | The answer discusses a different policy or ignores the requested action. | Improve intent routing and require coverage of every sub-question. |
+| Context Recall | A brief, simple factual answer needs only one supporting chunk. | A multi-condition policy question lacks evidence for a required exception, date, or fee. | Improve query formulation, chunking, and retrieval coverage. |
+| Context Precision | Extra harmless context appears after the evidence and does not alter generation. | Early distractor chunks cause the assistant to choose an unrelated policy. | Rerank chunks and filter by intent/source. |
+| Completeness | The user asks a narrowly scoped yes/no question and the essential answer is present. | The answer omits a required condition, exception, deadline, or next step. | Add a response checklist and multi-condition regression cases. |
 
 ### Exercise 1.2 — Bias trong LLM-as-a-Judge
 
@@ -46,15 +46,26 @@ Ba bias thường gặp:
 
 **Câu 1: Thiết kế experiment phát hiện position bias với ít nhất hai conditions.**
 
-> *Câu trả lời:*
+> Create a paired-answer experiment with the same question, evidence and two
+> equally correct answers. Condition A presents Answer 1 first and Answer 2
+> second; Condition B reverses the order. Randomize the order across many
+> examples, keep answer length and source identity blinded, and compare the
+> score difference for the same answer in the two positions. A consistent
+> first-position uplift indicates positional bias.
 
 **Câu 2: Làm thế nào giảm verbosity bias bằng rubric design?**
 
-> *Câu trả lời:*
+> Define each score by factual policy coverage, required conditions, safety and
+> actionable next steps—not word count. State explicitly that extra length earns
+> no credit, penalize unsupported filler, and provide matched concise and
+> verbose calibration examples that should receive the same score.
 
 **Câu 3: Tại sao cần calibrate LLM judge với human labels?**
 
-> *Câu trả lời:*
+> Human labels establish whether the rubric reflects the support policy and
+> customer outcome that matter. Calibration measures agreement, exposes model
+> preferences for its own style or verbosity, and identifies cases such as safe
+> refusals where lexical or model-only scoring can be misleading.
 
 ### Exercise 1.3 — Evaluation trong CI/CD
 
@@ -62,13 +73,18 @@ Ba bias thường gặp:
 
 | Metric | Threshold | Lý do |
 |---|---:|---|
-| Faithfulness | | |
-| Answer Relevance | | |
-| Completeness | | |
+| Faithfulness | 0.70 | Unsupported policy claims can cause harmful customer action; lower scores block deployment. |
+| Answer Relevance | 0.65 | Answers must address the stated support intent; lower values trigger prompt and intent review. |
+| Completeness | 0.70 | Policy answers must preserve material conditions, exceptions, dates and next steps. |
 
 **Câu 2: Khi nào dùng offline evaluation, online evaluation và human review?**
 
-> *Câu trả lời:*
+> Use offline evaluation before merging a prompt, retrieval, corpus, model or
+> policy change because it is reproducible against the golden dataset. Use
+> online evaluation after release to monitor live satisfaction, escalation
+> volume, resolution rate and emerging queries. Use human review for safety,
+> privacy, high-value refunds/warranties, policy ambiguity and low-confidence
+> or regressed cases.
 
 ---
 
@@ -346,11 +362,11 @@ Hoàn thành `reflection.md` bằng kết quả thật từ Exercise 3.2.
 
 Hoàn thành kiểm tra cuối trong khoảng 16:50–17:00.
 
-- [ ] Tất cả required tests pass.
-- [ ] `golden_dataset.json` validate thành công.
-- [ ] Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
-- [ ] Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
-- [ ] Exercise 3.3 có rubric 1–5 và bias controls.
-- [ ] `reflection.md` có ba failure analyses và regression strategy.
-- [ ] Đã copy `template.py` thành `solution/solution.py`.
-- [ ] Exercise 3.4 và 3.5 chỉ làm nếu chọn bonus.
+- [x] Tất cả required tests pass.
+- [x] `golden_dataset.json` validate thành công.
+- [x] Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
+- [x] Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
+- [x] Exercise 3.3 có rubric 1–5 và bias controls.
+- [x] `reflection.md` có ba failure analyses và regression strategy.
+- [x] Đã copy `template.py` thành `solution/solution.py`.
+- [x] Exercise 3.4 và 3.5 đã hoàn thành (bonus).
